@@ -19,11 +19,26 @@ public class Main {
       System.out.println("\t"+input);
       System.out.println();
       Scrummy game= new Scrummy(input);
+     
+      //KS 2H 3H 4H 5H 5D 5S
+      //AH 2H 3H 5C 5D 5S JH JD QH KH 9H 9C 9D 9S
+
       game.findRun();
-      //game.findSet();
+      System.out.println("************");
+     // System.out.println("runs found");
+      game.findSet();
+     
+      System.out.println("************");
+      System.out.println("cards left");
+      game.printCurrentCards();
+      System.out.println("************");
+      game.calcScore(); 
 		
-      game.calcScore();
-      //
+      
+      
+      
+    
+    
     }
   }
 }

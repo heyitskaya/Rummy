@@ -11,6 +11,7 @@ public class Scrummy {
 	public Scrummy(String s)
 	{
 		parseIntoSet(s); //sets currentCards to the set
+		
 	}
 	
 	public HashSet<Card> getCardSet()
@@ -89,7 +90,8 @@ public class Scrummy {
 		
 	}
 
-	public ArrayList<ArrayList<Card>> findRun()
+	//public ArrayList<ArrayList<Card>> findRun()
+	public HashSet<ArrayList<Card>> findRun()
 	{
 		initHashMapForRun();
 		//iterate through currentCards
@@ -100,7 +102,6 @@ public class Scrummy {
 			String currentSuit=currentCard.getSuit();
 			ArrayList<Card> tempList=mapForRun.get(currentSuit);
 			tempList.add(currentCard);
-			
 		}
 		Iterator iter2= mapForRun.keySet().iterator();
 		while(iter2.hasNext())
@@ -114,12 +115,10 @@ public class Scrummy {
 				findRunInArrayList(list);
 			}
 		}
-		//after this all the lists should be sorted
-		//again iterate through them
-	//	Iterator iter3= mapForRun.keySet
-		//update currentCards after calling this
 		
-		return finalSet;
+	//	return finalSet;
+		return setOfValidRuns;
+		
 	}
 	
 	//look at this again
@@ -148,8 +147,6 @@ public class Scrummy {
 		int size=a.size();  //CHANGED THIS BE VERY CAREFUL
 		while(p2<size && p1<p2)
 		{
-			//System.out.println("p1 "+p1);
-			//System.out.println("p2 "+p2);
 			if(isValidRun(p1,p2,a)) //if this is a valid run
 			{
 				size=a.size(); //update size here cause we may have removed sth
@@ -160,10 +157,6 @@ public class Scrummy {
 				currentCards.remove(a.get(p1));
 				currentCards.remove(a.get(p1+1));
 				currentCards.remove(a.get(p2));
-				
-				//after adding p1 to p2 increment p2 to see we can find anymmore
-				//while(a.get(p2+1).getOrder()-a.get(p2).getOrder()==1 && p2<size)
-				
 				if(inRange(p2+1,size))
 				{
 				
@@ -171,17 +164,18 @@ public class Scrummy {
 				{
 					temp.add(a.get(p2+1));
 					currentCards.remove(a.get(p2+1));
-					
 					p2++;
 				}
 				}
 				else //we've reached end of arraylist
 				{
+		
+					printList(temp);
 					setOfValidRuns.add(temp);
 					return setOfValidRuns;
 				}
-				
-				if(temp.contains(A1))
+				//once we've removed the duplicate
+				if(temp.contains(A1)) //remove the duplicate
 				{
 					a.remove(A14);
 				}
@@ -189,37 +183,29 @@ public class Scrummy {
 				{
 					a.remove(A1);
 				}
-				System.out.println("dsjfljflsf");
-				printList(temp);
-				
 				setOfValidRuns.add(temp);
-				
-				
+				System.out.println("runs found");
+				printList(temp);
 				if(inRange(p2+1,size) && inRange(p2+3,size))
 				{
-					
 					p1=p2+1;
 					p2=p1+2;
 				}
 			}
 			else
 			{
-				//System.out.println("we should be in here");
 				p1++;
 				p2++;
 			}
 		}
-		//System.out.println("set of valid runs "+ setOfValidRuns.size());
 		for(ArrayList<Card> list:setOfValidRuns)
 		{
 			StringBuilder sb= new StringBuilder("");
-			
 			for(Card c:list)
 			{
 				sb.append(c.toString());
 				sb.append(" ");
 			}
-			//System.out.println("Fucking print");
 			System.out.println("printing runs");
 			System.out.println(sb.toString());
 			
@@ -282,7 +268,7 @@ public class Scrummy {
 			Card currentCard= (Card)iter.next();
 			Integer order=currentCard.getOrder();
 			ArrayList<Card> tempList=mapForSet.get(order);
-			printList(tempList);
+			//printList(tempList);
 			tempList.add(currentCard);
 			//put it back in the map
 			mapForSet.put(order, tempList);
@@ -298,18 +284,15 @@ public class Scrummy {
 			{
 				setsFound.add(currentArrayList);
 				iter2.remove(); //use iter.remove() to remove things
-				//from hashmap while iterating through it
-				
-				//iterate through currentArrayList and remove eveything from
-				//currentCards thats currently in this arrayList
 				for(Card c:currentArrayList)
 				{
 					currentCards.remove(c);
 				}
 			}
 			//instead of removing set key to void
-			//mapForSet.put(-1, new ArrayList<Card>());
+			
 		}
+		System.out.println("sets found");
 		for(ArrayList<Card> al: setsFound)
 		{
 			StringBuilder sb = new StringBuilder("");
@@ -317,11 +300,9 @@ public class Scrummy {
 			{
 				sb.append(c.toString());
 				sb.append(" ");
-				
 			}
-			System.out.println(sb.toString()); //DO NOT UNCOMMENT
+			System.out.println(sb.toString());
 		}
-		
 		return setsFound;
 		//after getting the set update the currentCards hashset
 	}
@@ -346,12 +327,16 @@ public class Scrummy {
 	{
 		//iterate through hashset that is current cards and print stuff
 		Iterator iter= currentCards.iterator();
+		StringBuilder sb= new StringBuilder("");
 		while(iter.hasNext())
 		{
 			Card currentCard= (Card)iter.next();
-			currentCard.toString();
+			sb.append(currentCard.toString());
+			sb.append(" ");
 			
 		}
+		System.out.println(sb.toString());
+		
 	}
 	
 	public HashMap<String,ArrayList<Card>> getMapForRun()
@@ -368,7 +353,6 @@ public class Scrummy {
 			s.append(" ");
 		}
 		System.out.println(s.toString());
-		//System.out.println("kaya af" +s);
 	}
 	
 	public int calcScore()
@@ -382,21 +366,35 @@ public class Scrummy {
 		System.out.println("The score is "+score);
 		return score;
 	}
-	
+	public void printResult()
+	{
+
+		findSet();
+		System.out.println("************");
+		findRun();
+		System.out.println("************");
+		System.out.println("Cards leftover");
+		printCurrentCards();
+		System.out.println("************");
+		
+		calcScore();
+		
+	}
 	public static void main(String[] args)
 	{
-		//Scrummy game= new Scrummy("AH 2H 3H 5C 5D 5S JH JD QH KH 9H 9C 9D 9S");
-		Scrummy game= new Scrummy("KS 2H 3H 4H 5H 5D 5S");
-		System.out.println("??????????");
+		
+		Scrummy game= new Scrummy("AH 2H 3H 5C 5D 5S JH JD QH KH 9H 9C 9D 9S");
+		
+		
+	
 		game.findSet();
-		System.out.println("7777777777");
+		System.out.println("************");
 		game.findRun();
-		System.out.println("9999999999");
+		System.out.println("************");
+		game.calcScore(); 
 		
 		
 		
-		
-		game.calcScore();
 	}
 		
 	

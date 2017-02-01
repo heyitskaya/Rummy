@@ -29,7 +29,7 @@ public class Card implements Comparable<Card>{
 	}
 	
 	/** print string form of card**/
-	public String toString()
+/**	public String toString()
 	{
 		StringBuilder s= new StringBuilder(""); //string builder with empty string
 		s.append(this.cost);
@@ -39,6 +39,43 @@ public class Card implements Comparable<Card>{
 		return s.toString();
 		
 	}
+	**/
+	
+	//rewrote toString
+	
+	public String toString()
+	{
+		StringBuilder s= new StringBuilder("");
+		Integer cost= this.cost;
+		String suit=this.suit;
+		Integer order= this.order;
+		
+		if(order==1)
+		{
+			s.append("A");
+		}
+		else if(order==11)
+		{
+			s.append("J");
+		}
+		else if(order == 12)
+		{
+			s.append("Q");
+		}
+		else if(order==13)
+		{
+			s.append("K");
+		}
+		else
+		{
+			s.append(order);
+		}
+		
+		s.append(suit);
+		return s.toString();
+	
+	}
+	
 	
 	/** compared to according to order**/
 	public int compareTo(Card b)
